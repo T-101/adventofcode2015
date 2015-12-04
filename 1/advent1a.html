@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Advent 1a</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<h3>Advent 1a</h3>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 232 -->
+
+<script>
+	var floor = 0
+	var input = $.get("input1a.txt", function(data) {
+		for (var i = 0; i < data.length; i++) {
+			if (data[i] == "(") floor++
+			if (data[i] == ")") floor--
+		}
+	$("#answer").text(floor)
+	})
+</script>
+
+</body>
+</html>

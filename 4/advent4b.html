@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 4b</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+</head>
+<body>
+
+<h3>Advent 4b</h3>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 1038736 -->
+
+<script>
+	var input = "bgvyzdsv"
+	var iteration = 1
+	while (true) {
+		var hash = CryptoJS.MD5(input + iteration).toString()
+		if (hash.substr(0,6) == "000000") {
+			console.log("loyty: " + hash)
+			console.log("index " + iteration)
+			break
+		}
+		iteration++
+	}
+	$("#answer").text(iteration)
+</script>
+
+</body>
+</html>

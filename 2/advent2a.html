@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Advent 2a</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<h3>Advent 2a</h3>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 1606483 -->
+
+<script>
+	var answer = 0
+	var input = $.get("input2a.txt", function(data) {
+		var lines = data.split("\n")
+		$.each(lines, function(line) {
+			if (lines[line].length > 0) {
+				var l = parseInt(lines[line].split("x")[0])
+				var w = parseInt(lines[line].split("x")[1])
+				var h = parseInt(lines[line].split("x")[2])
+				
+				var slack = Math.min(l*w, w*h, h*l)
+				
+				var paper = (2 * l * w) + (2 * w * h) + (2 * h * l) + slack
+				answer += paper
+			}
+		})
+		$("#answer").text(answer)
+	});
+</script>
+
+</body>
+</html>

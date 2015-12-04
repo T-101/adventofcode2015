@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Advent 3a</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<h3>Advent 3a</h3>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 2565 -->
+
+<script>
+	var input = $.get("input3a.txt", function(data) {
+
+		board = new Array
+		for (var i = -data.length; i <= data.length; i++) {
+			board[i] = new Array
+		}
+		var x = 0
+		var y = 0
+		board[x][y] = 1
+		var houses = 1
+		
+		for (var i = 0; i < data.length; i++) {
+			switch(data[i]) {
+				case '^':
+					y += 1
+					break
+				case '>':
+					x += 1
+					break
+				case 'v':
+					y -= 1
+					break
+				case '<':
+					x -= 1
+					break
+			}
+			if (typeof board[x][y] == "undefined") {
+				board[x][y] = 1
+				houses += 1
+			} else {
+				board[x][y] += 1
+			}
+		}
+		$("#answer").text(houses)
+	});
+</script>
+
+</body>
+</html>
