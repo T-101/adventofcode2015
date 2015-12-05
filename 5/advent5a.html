@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 5a</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<h3>Advent 5a</h3>
+
+<p>--- Day 5: Doesn't He Have Intern-Elves For This? ---</p>
+
+<p>Santa needs help figuring out which strings in his text file are naughty or nice.</p>
+
+<p>A nice string is one with all of the following properties:</p>
+
+<ul>
+<li>It contains at least three vowels (aeiou only), like aei, xazegov, or aeiouaeiouaeiou.
+<li>It contains at least one letter that appears twice in a row, like xx, abcdde (dd), or aabbccdd (aa, bb, cc, or dd).
+<li>It does not contain the strings ab, cd, pq, or xy, even if they are part of one of the other requirements.
+</ul>
+<p>For example:</p>
+
+<ul>
+<li>ugknbfddgicrmopn is nice because it has at least three vowels (u...i...o...), a double letter (...dd...), and none of the disallowed substrings.
+<li>aaa is nice because it has at least three vowels and a double letter, even though the letters used by different rules overlap.
+<li>jchzalrnumimnmhp is naughty because it has no double letter.
+<li>haegwjzuvuyypxyu is naughty because it contains the string xy.
+<li>dvszwmarrgswjxmb is naughty because it contains only one vowel.
+</ul>
+
+<p>How many strings are nice?</p>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 238 -->
+
+<script>
+	var input = $.get('input5a.txt', function(data) {
+		var lines = data.split('\n')
+		var linecount = 0
+		var croppedLines = ""
+		console.log("Data length: " + data.length);
+		console.log("Lines length: " + lines.length);
+		$.each(lines, function(line) {
+			if (lines[line].search(/(ab|cd|pq|xy)/gi) == -1 && lines[line].search(/(.)\1+/gi) != -1) croppedLines += lines[line] + '\n'
+		})
+		var lines = croppedLines.split('\n')
+		console.log("Cropped lines length: " + lines.length)
+		$.each(lines, function(line) {
+			if (lines[line].match(/[aeiou]/gi) != null) {
+				if (lines[line].match(/[aeiou]/gi).length >= 3) linecount++
+			}
+		})
+		console.log("Total compliant lines: " + linecount)
+		$("#answer").text(linecount)
+	});
+</script>
+
+</body>
+</html>
