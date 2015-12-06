@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 6b</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<h3>Advent 6b</h3>
+
+<p>--- Part Two ---</p>
+
+<p>You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from Ancient Nordic Elvish.</p>
+
+<p>The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more. The lights all start at zero.</p>
+
+<p>The phrase turn on actually means that you should increase the brightness of those lights by 1.</p>
+
+<p>The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.</p>
+
+<p>The phrase toggle actually means that you should increase the brightness of those lights by 2.</p>
+
+<p>What is the total brightness of all lights combined after following Santa's instructions?</p>
+
+<p>For example:</p>
+
+<ul>
+<li>turn on 0,0 through 0,0 would increase the total brightness by 1.
+<li>toggle 0,0 through 999,999 would increase the total brightness by 2000000.
+</ul>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 14687245 -->
+
+<script>
+	var input = $.get("input6a.txt", function(data) {
+		var lights = new Array
+		for (var x = 0; x < 1000; x++) {
+			for (var y = 0; y < 1000; y++) {
+				lights[x] = new Array
+		}	}
+
+		console.log("Data length: " + data.length)
+		data = data.split('\n')
+		console.log("Lines length: " + data.length)
+		data.forEach(function(line) {
+			var parseLine = /.*?(on|off|toggle).*?(\d+),(\d+).*?(\d+),(\d+)/.exec(line);
+			var on = parseLine[1] === 'on';
+			var toggle = parseLine[1] === 'toggle';
+
+			for (var x = parseInt(parseLine[2]); x <= parseInt(parseLine[4]); x++) {
+				for (var y = parseInt(parseLine[3]); y <= parseInt(parseLine[5]); y++) {
+					if (parseLine[1] == "on") {
+						if (lights[x][y] > 0) { lights[x][y]++ } else { lights[x][y] = 1 }
+					}
+					if (parseLine[1] == "off") {
+						if (lights[x][y] > 0) { lights[x][y]-- } else { lights[x][y] = 0 }
+					}
+					if (parseLine[1] == "toggle") {
+						if (lights[x][y] > 0) {
+							lights[x][y] += 2 } else { lights[x][y] = 2 }
+					}
+			}	}
+		})
+		
+		var lightCount = 0
+		for (var x = 0; x < 1000; x++) {
+			for (var y = 0; y < 1000; y++) {
+				if (lights[x][y] > 0) lightCount += lights[x][y]
+			}
+		}
+		console.log("Total brightness: " + lightCount)
+		$("#answer").text(lightCount)
+	})
+</script>
+
+</body>
+</html>
