@@ -18,68 +18,77 @@ What new signal is ultimately provided to wire a?</p>
 <!-- 14710 -->
 
 <script>
-	var input = $.get("input7a.txt", function(data) {
+	var input = $.get("input7a.txt", function(wiredata) {
 
-		console.log("Data length: " + data.length)
-		data = data.split('\n')
-		console.log("Lines length: " + data.length)
+		console.log("Data length: " + wiredata.length)
+		dataA = wiredata.split('\n')
+		dataB = wiredata.split('\n')
+		console.log("Lines length: " + dataA.length)
 		
-		for (var i = 0; i < data.length; i++) {
-			if (data[i].search(/^(\d+) -> b/) != -1) {
-				console.log("Rewiring wire B to 3176")
-				data[i] = "3176 -> b"
+		var values = new Array
+		
+		var wireA = iterateWires(dataA);
+		
+		for (var i = 0; i < dataB.length; i++) {
+			if (dataB[i].search(/^(\d+) -> b/) != -1) {
+				console.log("Rewiring wire B to " + wireA)
+				dataB[i] = wireA + " -> b"
 			}
 		}
 		
 		var values = new Array
+		var wireB = iterateWires(dataB)
+		$("#answer").text(wireB)
 		
-		while (data.length > 0) {
-			for (var i = 0; i < data.length; i++) {
-				var command = data[i].match(/^(\w+)\s?(\w+)?\s?(\w+)?\s->\s(\w+)$/)
-				if (typeof command[2] == "undefined") {
-					if (isNaN(parseInt(command[1]))) {
-						if (typeof values[command[1]] != "undefined") {
-							values[command[4]] = values[command[1]]
+		function iterateWires(data) {
+			while (data.length > 0) {
+				for (var i = 0; i < data.length; i++) {
+					var command = data[i].match(/^(\w+)\s?(\w+)?\s?(\w+)?\s->\s(\w+)$/)
+					if (typeof command[2] == "undefined") {
+						if (isNaN(parseInt(command[1]))) {
+							if (typeof values[command[1]] != "undefined") {
+								values[command[4]] = values[command[1]]
+								data.splice(i, 1)
+							}
+						} else {
+							values[command[4]] = parseInt(command[1])
 							data.splice(i, 1)
 						}
-					} else {
-						values[command[4]] = parseInt(command[1])
+					}
+					if (command[1] == "NOT" && typeof values[command[2]] != "undefined") {
+						values[command[4]] = ~ values[command[2]]
+						data.splice(i, 1)
+					}
+					if (command[2] == "RSHIFT" && typeof values[command[1]] != "undefined") {
+						values[command[4]] = values[command[1]] >> command[3]
+						data.splice(i, 1)
+					}	
+					if (command[2] == "LSHIFT" && typeof values[command[1]] != "undefined") {
+						values[command[4]] = values[command[1]] << command[3]
+						data.splice(i, 1)
+					}
+					if (command[2] == "AND") {
+						if (isNaN(parseInt(command[1]))) {
+							if (typeof values[command[1]] != "undefined" && typeof values[command[3]] != "undefined") {
+								values[command[4]] = values[command[1]] & values[command[3]]
+								data.splice(i, 1)
+							}
+						} else {
+							if (typeof values[command[3]] != "undefined") {
+								values[command[4]] = command[1] & values[command[3]]
+								data.splice(i, 1)
+							}
+						}
+					}
+					if (command[2] == "OR" && typeof values[command[1]] != "undefined" && typeof values[command[3]] != "undefined") {
+						values[command[4]] = values[command[1]] | values[command[3]]
 						data.splice(i, 1)
 					}
 				}
-				if (command[1] == "NOT" && typeof values[command[2]] != "undefined") {
-					values[command[4]] = ~ values[command[2]]
-					data.splice(i, 1)
-				}
-				if (command[2] == "RSHIFT" && typeof values[command[1]] != "undefined") {
-					values[command[4]] = values[command[1]] >> command[3]
-					data.splice(i, 1)
-				}	
-				if (command[2] == "LSHIFT" && typeof values[command[1]] != "undefined") {
-					values[command[4]] = values[command[1]] << command[3]
-					data.splice(i, 1)
-				}
-				if (command[2] == "AND") {
-					if (isNaN(parseInt(command[1]))) {
-						if (typeof values[command[1]] != "undefined" && typeof values[command[3]] != "undefined") {
-							values[command[4]] = values[command[1]] & values[command[3]]
-							data.splice(i, 1)
-						}
-					} else {
-						if (typeof values[command[3]] != "undefined") {
-							values[command[4]] = command[1] & values[command[3]]
-							data.splice(i, 1)
-						}
-					}
-				}
-				if (command[2] == "OR" && typeof values[command[1]] != "undefined" && typeof values[command[3]] != "undefined") {
-					values[command[4]] = values[command[1]] | values[command[3]]
-					data.splice(i, 1)
-				}
 			}
+			console.log("Value for wire A: " + values.a)
+			return (values.a)
 		}
-		console.log("Value for wire A: " + values.a)
-		$("#answer").text(values.a)
 	})
 </script>
 
