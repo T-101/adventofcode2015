@@ -21,26 +21,24 @@ What new signal is ultimately provided to wire a?</p>
 	var input = $.get("input7a.txt", function(wiredata) {
 
 		console.log("Data length: " + wiredata.length)
-		dataA = wiredata.split('\n')
-		dataB = wiredata.split('\n')
+		var dataA = wiredata.split('\n')
 		console.log("Lines length: " + dataA.length)
 		
-		var values = new Array
-		
 		var wireA = iterateWires(dataA);
+		var dataA = wiredata.split('\n')
 		
-		for (var i = 0; i < dataB.length; i++) {
-			if (dataB[i].search(/^(\d+) -> b/) != -1) {
+		for (var i = 0; i < dataA.length; i++) {
+			if (dataA[i].search(/^(\d+) -> b/) != -1) {
 				console.log("Rewiring wire B to " + wireA)
-				dataB[i] = wireA + " -> b"
+				dataA[i] = wireA + " -> b"
 			}
 		}
 		
-		var values = new Array
-		var wireB = iterateWires(dataB)
+		var wireB = iterateWires(dataA)
 		$("#answer").text(wireB)
 		
 		function iterateWires(data) {
+			var values = new Array
 			while (data.length > 0) {
 				for (var i = 0; i < data.length; i++) {
 					var command = data[i].match(/^(\w+)\s?(\w+)?\s?(\w+)?\s->\s(\w+)$/)
