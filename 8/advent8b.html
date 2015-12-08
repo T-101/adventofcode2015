@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 8b</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<p>--- Part Two ---</p>
+
+<p>Now, let's go the other way. In addition to finding the number of characters of code, you should now encode each code representation as a new string and find the number of characters of the new encoded representation, including the surrounding double quotes.</p>
+
+<p>For example:</p>
+
+<ul>
+<li>"" encodes to "\"\"", an increase from 2 characters to 6.
+<li>"abc" encodes to "\"abc\"", an increase from 5 characters to 9.
+<li>"aaa\"aaa" encodes to "\"aaa\\\"aaa\"", an increase from 10 characters to 16.
+<li>"\x27" encodes to "\"\\x27\"", an increase from 6 characters to 11.
+<li>Your task is to find the total number of characters to represent the newly encoded strings minus the number of characters of code in each original string literal. For example, for the strings above, the total encoded length (6 + 9 + 16 + 11 = 42) minus the characters in the original code representation (23, just like in the first part of this puzzle) is 42 - 23 = 19.
+</ul>
+
+<p>Answer: <span id="answer"></span></p>
+<!-- 2117 -->
+
+<script>
+	var input = $.get("input8a.txt", function(data) {
+		var data = data.split('\n')
+		var originalLength = 0
+		var escapedLength = 0
+		data.forEach(function(line) {
+			originalLength += line.length
+			escapedLength += makeEscapes(line).length
+		})
+		
+		console.log("Original length: " + originalLength)
+		console.log("Escaped length: " + escapedLength)
+		console.log("Answer: " + (escapedLength - originalLength))
+		$("#answer").text(escapedLength - originalLength)
+		
+		function makeEscapes(linedata) {
+			str = linedata
+			str = str.replace(/\\/g, '\\\\')
+			str = str.replace(/\"/g, '\\"')
+			return '"' + str + '"'
+		}
+	})
+</script>
+
+</body>
+</html>
