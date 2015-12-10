@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 9</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<p>--- Day 9: All in a Single Night ---</p>
+
+<p>Every year, Santa manages to deliver all of his presents in a single night.</p>
+
+<p>This year, however, he has some new locations to visit; his elves have provided him the distances between every pair of locations. He can start and end at any two (different) locations he wants, but he must visit each location exactly once. What is the shortest distance he can travel to achieve this?</p>
+
+<p>For example, given the following distances:</p>
+
+<ul>
+<li>London to Dublin = 464
+<li>London to Belfast = 518
+<li>Dublin to Belfast = 141
+<li>The possible routes are therefore:
+</ul>
+
+<ul>
+<li>Dublin -> London -> Belfast = 982
+<li>London -> Dublin -> Belfast = 605
+<li>London -> Belfast -> Dublin = 659
+<li>Dublin -> Belfast -> London = 659
+<li>Belfast -> Dublin -> London = 605
+<li>Belfast -> London -> Dublin = 982
+</ul>
+
+<p>The shortest of these is London -> Dublin -> Belfast = 605, and so the answer is 605 in this example.</p>
+
+<p>Part 1 - What is the distance of the shortest route?</p>
+
+<p>Part 2 - What is the distance of the longest route?</p>
+
+<p>Answer 1: <span id="answer"></span></p>
+<!-- 251 -->
+<p>Answer 2: <span id="answer2"></span></p>
+<!-- 898 -->
+
+<script>
+	var input = $.get("input9a.txt", function(data) {
+		var data = data.split('\n')
+
+		var places = new Array
+		var routes = new Array
+		var possibleRoutes = new Array
+		var usedRoutes = new Array
+
+		data.forEach(function(line) {
+			var items = line.split(" ")
+			if (places.indexOf(items[0]) == -1) places.push(items[0])
+			if (places.indexOf(items[2]) == -1) places.push(items[2])
+			routes.push({ place1: items[0], place2: items[2], distance: items[4]} )
+			routes.push({ place1: items[2], place2: items[0], distance: items[4]} )
+		})
+		
+		possibleRoutes = permute(places)
+		var distance = 0
+		
+		possibleRoutes.forEach(function(route) {
+			distance = 0
+			for (var i = 0; i < route.length-1; i++) {
+				var routeNeeded = routes.filter(function(place) {
+					return place.place1 == route[i] && place.place2 == route[i+1]
+				})[0]
+				distance += parseInt(routeNeeded.distance)
+			}
+			route.distance = distance
+		})
+
+		var shortestRoute = 0
+		var longestRoute = 0
+		
+		possibleRoutes.forEach(function(route) {
+			if (shortestRoute == 0 || route.distance < shortestRoute) shortestRoute = route.distance
+			if (longestRoute == 0 || route.distance > longestRoute) longestRoute = route.distance
+		})
+
+		function permute(input) {
+			var route
+			for (var i = 0; i < input.length; i++) {
+				route = input.splice(i, 1)[0]
+				usedRoutes.push(route)
+				if (input.length == 0) possibleRoutes.push(usedRoutes.slice())
+				permute(input)
+				input.splice(i, 0, route)
+				usedRoutes.pop()
+			}
+			return possibleRoutes
+		}
+		
+		console.log("Shortest route: " + shortestRoute)
+		console.log("Longest  route: " + longestRoute)
+		$("#answer").text(shortestRoute)
+		$("#answer2").text(longestRoute)
+	})
+</script>
+
+</body>
+</html>
