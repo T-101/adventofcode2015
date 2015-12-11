@@ -31,40 +31,42 @@
 <li>abbcegjk fails the third requirement, because it only has one double letter (bb).
 <li>The next password after abcdefgh is abcdffaa.
 <li>The next password after ghijklmn is ghjaabcc, because you eventually skip all the passwords that start with ghi..., since i is not allowed.
-<ul>
+</ul>
 
 <p>Given Santa's current password (your puzzle input), what should his next password be?</p>
 
+<p>--- Part Two ---</p>
+
+<p>Santa's password expired again. What's the next one?</p>
+
 <p>Answer 1: <span id="answer"></span></p>
-<!-- 252594 -->
+<!-- hepxxyzz -->
 <p>Answer 2: <span id="answer2"></span></p>
-<!-- 3579328 -->
+<!-- heqaabcc -->
 
 <script>
 	var input = "hepxcrrq"
 	var answer1 = ""
-	var iteration = 0
-	var start = Date.now()
+	var answer2 = ""
+	var rule1 = /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/
+	var rule2 = /[ilo]/
+	var rule3 = /(.)\1.*(.)\2/
 	while (true) {
-		//var testpw = parseInt(input, 36)
-		var rule1 = /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/
-		var rule2 = /[ilo]/
-		var rule3 = /(.)\2/
 		if (rule1.test(input) && !rule2.test(input) && rule3.test(input)) {
-				answer1 = input
-				break
+				if (answer1 == "") {
+					answer1 = input
+				} else {
+					answer2 = input
+					break
+				}
 			}
 		var testpw = parseInt(input, 36) + 1
 		input = testpw.toString(36).replace(/0/, "a")
-		iteration++
-		if (iteration > 100000000) {
-			console.log("break at input: " + input)
-			break
-		}
 	}
-	console.log(Date.now() - start)
-	console.log("Password found at iteration " + iteration + ": " + answer1)
+	console.log("Password 1 found: " + answer1)
+	console.log("Password 2 found: " + answer2)
 	$("#answer").text(answer1)
+	$("#answer2").text(answer2)
 </script>
 
 </body>
