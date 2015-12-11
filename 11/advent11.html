@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 11</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<p>--- Day 11: Corporate Policy ---</p>
+
+<p>Santa's previous password expired, and he needs help choosing a new one.</p>
+
+<p>To help him remember his new password after the old one expires, Santa has devised a method of coming up with a password based on the previous one. Corporate policy dictates that passwords must be exactly eight lowercase letters (for security reasons), so he finds his new password by incrementing his old password string repeatedly until it is valid.</p>
+
+<p>Incrementing is just like counting with numbers: xx, xy, xz, ya, yb, and so on. Increase the rightmost letter one step; if it was z, it wraps around to a, and repeat with the next letter to the left until one doesn't wrap around.</p>
+
+<p>Unfortunately for Santa, a new Security-Elf recently started, and he has imposed some additional password requirements:</p>
+
+<ul>
+<li>Passwords must include one increasing straight of at least three letters, like abc, bcd, cde, and so on, up to xyz. They cannot skip letters; abd doesn't count.
+<li>Passwords may not contain the letters i, o, or l, as these letters can be mistaken for other characters and are therefore confusing.
+<li>Passwords must contain at least two different, non-overlapping pairs of letters, like aa, bb, or zz.
+</ul>
+
+<p>For example:</p>
+
+<ul>
+<li>hijklmmn meets the first requirement (because it contains the straight hij) but fails the second requirement requirement (because it contains i and l).
+<li>abbceffg meets the third requirement (because it repeats bb and ff) but fails the first requirement.
+<li>abbcegjk fails the third requirement, because it only has one double letter (bb).
+<li>The next password after abcdefgh is abcdffaa.
+<li>The next password after ghijklmn is ghjaabcc, because you eventually skip all the passwords that start with ghi..., since i is not allowed.
+<ul>
+
+<p>Given Santa's current password (your puzzle input), what should his next password be?</p>
+
+<p>Answer 1: <span id="answer"></span></p>
+<!-- 252594 -->
+<p>Answer 2: <span id="answer2"></span></p>
+<!-- 3579328 -->
+
+<script>
+	var input = "hepxcrrq"
+	var answer1 = ""
+	var iteration = 0
+	var start = Date.now()
+	while (true) {
+		//var testpw = parseInt(input, 36)
+		var rule1 = /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/
+		var rule2 = /[ilo]/
+		var rule3 = /(.)\2/
+		if (rule1.test(input) && !rule2.test(input) && rule3.test(input)) {
+				answer1 = input
+				break
+			}
+		var testpw = parseInt(input, 36) + 1
+		input = testpw.toString(36).replace(/0/, "a")
+		iteration++
+		if (iteration > 100000000) {
+			console.log("break at input: " + input)
+			break
+		}
+	}
+	console.log(Date.now() - start)
+	console.log("Password found at iteration " + iteration + ": " + answer1)
+	$("#answer").text(answer1)
+</script>
+
+</body>
+</html>
