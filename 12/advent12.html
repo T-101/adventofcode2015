@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 12</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<p>--- Day 12: JSAbacusFramework.io ---</p>
+
+<p>Santa's Accounting-Elves need help balancing the books after a recent order. Unfortunately, their accounting software uses a peculiar storage format. That's where you come in.</p>
+
+<p>They have a JSON document which contains a variety of things: arrays ([1,2,3]), objects ({"a":1, "b":2}), numbers, and strings. Your first job is to simply find all of the numbers throughout the document and add them together.</p>
+
+<p>For example:
+
+<ul>
+<li>[1,2,3] and {"a":2,"b":4} both have a sum of 6.
+<li>[[[3]]] and {"a":{"b":4},"c":-1} both have a sum of 3.
+<li>{"a":[-1,1]} and [-1,{"a":1}] both have a sum of 0.
+<li>[] and {} both have a sum of 0.
+</ul>
+
+<p>You will not encounter any strings containing numbers.</p>
+
+<p>What is the sum of all numbers in the document?
+
+<p>--- Part Two ---</p>
+
+<p>Uh oh - the Accounting-Elves have realized that they double-counted everything red.</p>
+
+<p>Ignore any object (and all of its children) which has any property with the value "red". Do this only for objects ({...}), not arrays ([...]).</p>
+
+<ul>
+<li>[1,2,3] still has a sum of 6.
+<li>[1,{"c":"red","b":2},3] now has a sum of 4, because the middle object is ignored.
+<li>{"d":"red","e":[1,2,3,4],"f":5} now has a sum of 0, because the entire structure is ignored.
+<li>[1,"red",5] has a sum of 6, because "red" in an array has no effect.
+</ul>
+
+<p>Answer 1: <span id="answer"></span></p>
+<!-- 111754 -->
+<p>Answer 2: <span id="answer2"></span></p>
+<!-- 65402 -->
+
+<script>
+	var input = $.get("input12.txt", function(data) {
+
+		function count(keys) {
+			var matches = keys.match(/-?(\d+)/g)
+			var sum = 0
+			for (var i = 0; i < matches.length; i++) sum += parseInt(matches[i])
+			return sum
+		}
+		
+		function walk(keys) {
+			if (!Array.isArray(keys) && typeof keys === "object") {
+				for (key in keys) {
+					if (keys[key] === "red") return 0
+				}
+			}
+
+			var sum = 0
+			for (key in keys) {
+				if (typeof keys[key] === "number") {
+					sum += keys[key]
+				} else if (typeof keys[key] === "object") sum += walk(keys[key])
+			}
+			return sum
+		}
+		
+		var answer1 = count(data)
+		var answer2 = walk(JSON.parse(data))
+		console.log("Sum of integers 1: " + answer1)
+		console.log("Sum of integers 2: " + answer2);
+		$("#answer").text(answer1)
+		$("#answer2").text(answer2)
+	})
+</script>
+
+</body>
+</html>
