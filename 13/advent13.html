@@ -52,10 +52,29 @@ Carol       Alice
 <!-- ? -->
 
 <script>
-	var input = $.get("input9a.txt", function(data) {
+	var input = $.get("input13a.txt", function(data) {
 		var data = data.split('\n')
-
-
+		
+		var rules = new Array
+		var people = new Array
+		var table = new Array
+		
+		data.forEach(function(line) {
+			var match = line.match(/(\w+).*(lose|gain)\s(\d+) happiness units by sitting next to (\w+)/);
+			var rule = { 'name': match[1], 'value': match[2] === 'lose' ? -parseInt(match[3]) : parseInt(match[3]), 'target': match[4] }
+			rules.push(rule)
+			if (people.indexOf(match[1]) == -1) people.push(match[1])
+		})
+		console.log(rules.length)
+		console.log(people)
+		people.forEach(function(line) {
+			table.push(line)
+		})
+		happiness = 0
+		for (var i = 0; i < table.length; i++) {
+			
+		}
+		
 	})
 </script>
 
