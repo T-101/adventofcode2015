@@ -55,26 +55,55 @@ Carol       Alice
 	var input = $.get("input13a.txt", function(data) {
 		var data = data.split('\n')
 		
-		var rules = new Array
-		var people = new Array
-		var table = new Array
 		
-		data.forEach(function(line) {
-			var match = line.match(/(\w+).*(lose|gain)\s(\d+) happiness units by sitting next to (\w+)/);
-			var rule = { 'name': match[1], 'value': match[2] === 'lose' ? -parseInt(match[3]) : parseInt(match[3]), 'target': match[4] }
-			rules.push(rule)
-			if (people.indexOf(match[1]) == -1) people.push(match[1])
-		})
-		console.log(rules.length)
-		console.log(people)
-		people.forEach(function(line) {
-			table.push(line)
-		})
-		happiness = 0
-		for (var i = 0; i < table.length; i++) {
+		function getHappiness(withMe) {
+			var rules = new Array
+			var people = new Array
+			var possibleSeating = new Array
+			var usedSeating = new Array
 			
+			data.forEach(function(line) {
+				var match = line.match(/(\w+).*(lose|gain)\s(\d+) happiness units by sitting next to (\w+)/);
+				var rule = { 'name': match[1], 'value': match[2] === 'lose' ? -parseInt(match[3]) : parseInt(match[3]), 'target': match[4] }
+				rules.push(rule)
+				if (people.indexOf(match[1]) == -1) people.push(match[1])
+			})
+			
+			if (withMe) people.push("Me")
+			
+			function permute(input) {
+				var seat
+				for (var i = 0; i < input.length; i++) {
+					seat = input.splice(i, 1)[0]
+					usedSeating.push(seat)
+					if (input.length == 0) possibleSeating.push(usedSeating.slice())
+					permute(input)
+					input.splice(i, 0, seat)
+					usedSeating.pop()
+				}
+				return possibleSeating
+			}
+			
+			possibleSeating = permute(people)
+			var happiness = 0
+			
+			possibleSeating.forEach(function(table) {
+				var currentHappiness = 0
+				for (var i = 0; i < table.length; i++) {
+					var before = (i + (table.length -1)) % table.length
+					var after = (i + 1) % table.length
+					rules.forEach(function(rule) {
+						if (table[i] == rule.name && table[before] == rule.target) currentHappiness += rule.value
+						if (table[i] == rule.name && table[after] == rule.target) currentHappiness += rule.value
+					})
+				}
+				if (currentHappiness > happiness) happiness = currentHappiness
+			})
+			return happiness
 		}
 		
+		console.log("Maximum Happiness:", getHappiness())
+		console.log("Maximum Happiness with me:", getHappiness(true))
 	})
 </script>
 
