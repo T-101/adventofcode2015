@@ -102,8 +102,12 @@ Carol       Alice
 			return happiness
 		}
 		
-		console.log("Maximum Happiness:", getHappiness())
-		console.log("Maximum Happiness with me:", getHappiness(true))
+		var answer = getHappiness()
+		var answer2 = getHappiness(true)
+		console.log("Maximum Happiness:", answer)
+		console.log("Maximum Happiness with me:", answer2)
+		$("#answer").text(answer)
+		$("#answer2").text(answer2)
 	})
 </script>
 
