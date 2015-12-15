@@ -25,6 +25,18 @@
 
 <p>Given the descriptions of each reindeer (in your puzzle input), after exactly 2503 seconds, what distance has the winning reindeer traveled?</p>
 
+<p>--- Part Two ---</p>
+
+<p>Seeing how reindeer move in bursts, Santa decides he's not pleased with the old scoring system.</p>
+
+<p>Instead, at the end of each second, he awards one point to the reindeer currently in the lead. (If there are multiple reindeer tied for the lead, they each get one point.) He keeps the traditional 2503 second time limit, of course, as doing otherwise would be entirely ridiculous.</p>
+
+<p>Given the example reindeer from above, after the first second, Dancer is in the lead and gets one point. He stays in the lead until several seconds into Comet's second burst: after the 140th second, Comet pulls into the lead and gets his first point. Of course, since Dancer had been in the lead for the 139 seconds before that, he has accumulated 139 points by the 140th second.</p>
+
+<p>After the 1000th second, Dancer has accumulated 689 points, while poor Comet, our old champion, only has 312. So, with the new scoring system, Dancer would win (if the race ended at 1000 seconds).</p>
+
+<p>Again given the descriptions of each reindeer (in your puzzle input), after exactly 2503 seconds, how many points does the winning reindeer have?</p>
+
 <p>Answer 1: <span id="answer"></span></p>
 <!-- ? -->
 <p>Answer 2: <span id="answer2"></span></p>
@@ -33,19 +45,52 @@
 <script>
 	var input = $.get("input14.txt", function(data) {
 		var data = data.split('\n')
-		var seconds = 0
 		var deer = new Array
-		deer[0] = { 'distance': 14, 'runUntil': 10, 'sleepUntil': 127, 'location': 0 }
-		deer[1] = { 'distance': 16, 'runUntil': 11, 'sleepUntil': 162, 'location': 0 }
-		while (seconds < 1000) {
+		for (var i = 0; i < data.length; i++) {
+			var match = data[i].match(/(\w+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+)/)
+			deer[i] = {	'name': match[1],
+						'distance': parseInt(match[2]),
+						'runUntil': parseInt(match[3]),
+						'sleepTime': parseInt(match[4]),
+						'location': 0,
+						'points': 0 }
+		}
+		
+		var seconds = 0
+		
+		while (seconds < 2503) {
+			var lead = 0
+			var leader = null
+
 			for (var i = 0; i < deer.length; i++) {
-				if (seconds % (deer[i].runUntil + deer[i].sleepUntil) < deer[i].runUntil) deer[i].location += deer[i].distance
+				if (seconds % (deer[i].runUntil + deer[i].sleepTime) < deer[i].runUntil) deer[i].location += deer[i].distance
+				if (deer[i].location > lead) lead = deer[i].location
+			}
+			for (var i = 0; i < deer.length; i++) {
+				if (deer[i].location == lead) deer[i].points++
 			}
 			seconds++
 		}
+		
+		var maxPoints = 0
+		var maxDistance = 0
+		var mostDistance = null
+		var mostPoints = null
+		
 		for (var i = 0; i < deer.length; i++) {
-			console.log("deer",i,"location:", deer[i].location)
+			if (deer[i].location > maxDistance) {
+				maxDistance = deer[i].location
+				mostDistance = deer[i]
+			}
+			if (deer[i].points > maxPoints) {
+				maxPoints = deer[i].points
+				mostPoints = deer[i]
+			}
 		}
+		console.log("Most distance:", mostDistance.name, "with distance:", mostDistance.location)
+		console.log("Most points:", mostPoints.name, "with points:", mostPoints.points)
+		$("#answer").text(mostDistance.location)
+		$("#answer2").text(mostPoints.points)
 	})
 </script>
 
