@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advent 17</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<p>--- Day 17: No Such Thing as Too Much ---</p>
+
+<p>The elves bought too much eggnog again - 150 liters this time. To fit it all into your refrigerator, you'll need to move it into smaller containers. You take an inventory of the capacities of the available containers.</p>
+
+<p>For example, suppose you have containers of size 20, 15, 10, 5, and 5 liters. If you need to store 25 liters, there are four ways to do it:</p>
+
+<ul>
+<li>15 and 10
+<li>20 and 5 (the first 5)
+<li>20 and 5 (the second 5)
+<li>15, 5, and 5
+</ul>
+
+<p>Filling all containers entirely, how many different combinations of containers can exactly fit all 150 liters of eggnog?</p>
+
+<p>Answer 1: <span id="answer"></span></p>
+<!--  -->
+<p>Answer 2: <span id="answer2"></span></p>
+<!--  -->
+
+<script>
+	var input = $.get("input17.txt", function(data) {
+		var data = data.split('\n')
+		
+		var csizes = data.map(Number).sort(function(a, b){return a-b})
+		console.log(csizes)
+		
+	})
+</script>
+
+</body>
+</html>
