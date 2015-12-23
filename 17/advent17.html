@@ -9,7 +9,8 @@
 
 <p>--- Day 17: No Such Thing as Too Much ---</p>
 
-<p>The elves bought too much eggnog again - 150 liters this time. To fit it all into your refrigerator, you'll need to move it into smaller containers. You take an inventory of the capacities of the available containers.</p>
+<p>The elves bought too much eggnog again - 150 liters this time. To fit it all into your refrigerator, you'll need to move it into smaller containers.
+You take an inventory of the capacities of the available containers.</p>
 
 <p>For example, suppose you have containers of size 20, 15, 10, 5, and 5 liters. If you need to store 25 liters, there are four ways to do it:</p>
 
@@ -22,18 +23,60 @@
 
 <p>Filling all containers entirely, how many different combinations of containers can exactly fit all 150 liters of eggnog?</p>
 
+<p>--- Part Two ---</p>
+
+<p>While playing with all the containers in the kitchen, another load of eggnog arrives! The shipping and receiving department is requesting as many containers as you can spare.</p>
+
+<p>Find the minimum number of containers that can exactly fit all 150 liters of eggnog. How many different ways can you fill that number of containers and still hold exactly 150 litres?</p>
+
+<p>In the example above, the minimum number of containers was two. There were three ways to use that many containers, and so the answer there would be 3.</p>
+
 <p>Answer 1: <span id="answer"></span></p>
-<!--  -->
+<!-- 1638 -->
 <p>Answer 2: <span id="answer2"></span></p>
-<!--  -->
+<!-- 17 -->
 
 <script>
 	var input = $.get("input17.txt", function(data) {
-		var data = data.split('\n')
+		var data = data.split('\n').map(Number)
 		
-		var csizes = data.map(Number).sort(function(a, b){return a-b})
-		console.log(csizes)
+		var minCount = Math.pow(data.length, data.length)
+		var hitCount = 0
+		var uniqueCount = []
 		
+		function subsetSum(numbers, target, partial) {
+			
+			var s, n, remaining
+
+			partial = partial || []
+
+			s = partial.reduce(function (a, b) { return a + b }, 0)
+
+			if (s === target) uniqueCount.push(partial.join("+"))
+
+			if (s >= target) return
+
+			for (var i = 0; i < numbers.length; i++) {
+				n = numbers[i]
+				remaining = numbers.slice(i + 1)
+				subsetSum(remaining, target, partial.concat([n]))
+			}
+		}
+		
+		subsetSum(data, 150)
+		
+		for (var i = 0; i < uniqueCount.length; i++) {
+			if (uniqueCount[i].match(/\+/g).length < minCount) minCount = uniqueCount[i].match(/\+/g).length
+		}
+		
+		for (var i = 0; i < uniqueCount.length; i++) {
+			if (uniqueCount[i].match(/\+/g).length == minCount) hitCount++
+		}
+		
+		console.log("Answer 1:", uniqueCount.length);
+		$("#answer").text(uniqueCount.length)
+		console.log("Answer 2:", hitCount)
+		$("#answer2").text(hitCount)
 	})
 </script>
 
